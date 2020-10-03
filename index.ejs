@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src='/js/script.js'></script>
+    <link rel='stylesheet' type='text/css' media='screen' href='/css/bootstrap.min.css'>
+    <link rel="stylesheet" href="codemirror/lib/codemirror.css">
+    <script src='/js/bootstrap.js'></script>
+    <link rel="stylesheet" href="codemirror/theme/monokai.css">
+    <title>Document</title>
+</head>
+<body>
+  <nav class="navbar navbar-light bg-success">
+    <a class="navbar-brand" href="#">
+      <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-play-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M11.596 8.697l-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+      </svg>
+    </a>
+  </nav>
+  <div class="row">
+    <div class="col-2">
+      <div class="list-group">
+        <% list.forEach(item => { %>
+          <button class="list-group-item list-group-item-action" onclick="selectCode('<%= item.id %>')"><%= item.name %></button>
+        <% }) %>
+      </div>
+    </div>
+    <div class="col-10">
+      <textarea id="myTextarea" name="myTextarea"></textarea>
+    </div>
+  </div>
+</body>
+<script src="codemirror/lib/codemirror.js"></script>
+<script src="codemirror/mode/sql/sql.js"></script>
+<script>
+  var editor = CodeMirror.fromTextArea(myTextarea, {
+    lineNumbers: true,
+    styleActiveLine: true,
+    matchBrackets: true,
+    lineWrapping: true,
+    mode: "sql"
+
+  });
+  editor.setOption("theme", "monokai");
+  function selectCode(id){
+    alert(id)
+    // var x = '<%- JSON.stringify(list) %>';
+    // editor.setValue(x)
+    var response = httpGet('http://localhost:3000/getCode?id=' + id);
+    editor.setValue(response)
+  }
+  function httpGet(theUrl)
+{
+    alert(theUrl);
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+    xmlHttp.send( null );
+    return xmlHttp.responseText;
+}
+</script>
+<style>
+  /* Editor params */
+.CodeMirror {
+  height: 600px;
+}
+</style>
+</html>
