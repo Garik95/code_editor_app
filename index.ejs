@@ -12,16 +12,16 @@
 </head>
 <body>
   <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
+    <ul class="breadcrumb" id="bread">
       <li class="breadcrumb-item"><a href="#">Home</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Your Project Name</li>
-    </ol>
+      <li class="breadcrumb-item">Your Project Name</li>
+    </ul>
   </nav>
   <div class="row" style="padding: 5px 5px 0 0;">
     <div class="col-2" style="padding: 5px 5px 0 0;">
       <div class="list-group">
         <% list.forEach(item => { %>
-          <button class="list-group-item list-group-item-action" ondblclick="selectCode('<%= item.id %>')"><%= item.name %></button>
+          <button class="list-group-item list-group-item-action" ondblclick="selectCode('<%= item.id %>','<%= item.name %>')"><%= item.name %></button>
         <% }) %>
       </div>
     </div>
@@ -102,9 +102,16 @@
 
   });
   editor.setOption("theme", "monokai");
-  function selectCode(id){
+  function selectCode(id,name){
     var response = httpGet('http://localhost:3000/getCode?id=' + id);
     editor.setValue(response)
+    var bread = document.getElementById('bread');
+    if(bread.getElementsByTagName("li").length == 2){
+      bread.innerHTML += '<li class="breadcrumb-item"><a>' + name + '</a></li>'
+    } else {
+      bread.getElementsByTagName("li")[2].remove();
+      bread.innerHTML += '<li class="breadcrumb-item"><a>' + name + '</a></li>'
+    }
     CodeId = id;
   }
   function httpGet(theUrl)
